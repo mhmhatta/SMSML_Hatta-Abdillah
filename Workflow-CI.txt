@@ -21,3 +21,7 @@ Expected MLflow secret values:
 MLFLOW_TRACKING_URI=https://dagshub.com/mhmhatta/smsml.mlflow
 MLFLOW_TRACKING_USERNAME=mhmhatta
 MLFLOW_TRACKING_PASSWORD=<your DagsHub token>
+
+CI note:
+- Do not use browser-based DagsHub OAuth in GitHub Actions.
+- The workflow logs through MLflow env vars only.

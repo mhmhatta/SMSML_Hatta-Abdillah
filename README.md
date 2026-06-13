@@ -103,6 +103,8 @@ python modelling.py
 python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000
 ```
 
+For non-interactive environments like GitHub Actions, do not use `dagshub.init()` OAuth. The scripts use MLflow environment variables directly.
+
 Open this after training:
 
 ```text
