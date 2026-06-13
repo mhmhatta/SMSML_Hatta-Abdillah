@@ -21,6 +21,8 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 
+from tracking import configure_tracking
+
 
 class TrainingDataError(ValueError):
     """Raised when processed training data is missing or invalid."""
@@ -32,6 +34,7 @@ class TrainingConfig:
     artifacts_dir: Path
     experiment_name: str
     max_iter: int
+    use_dagshub: bool
 
 
 TARGET_COLUMN = "Class"
@@ -60,12 +63,18 @@ def parse_args() -> TrainingConfig:
         type=int,
         help="Maximum LogisticRegression iterations.",
     )
+    parser.add_argument(
+        "--dagshub",
+        action="store_true",
+        help="Initialize DagsHub MLflow tracking for mhmhatta/smsml.",
+    )
     args = parser.parse_args()
     return TrainingConfig(
         processed_dir=Path(args.processed_dir),
         artifacts_dir=Path(args.artifacts_dir),
         experiment_name=args.experiment_name,
         max_iter=args.max_iter,
+        use_dagshub=args.dagshub,
     )
 
 
@@ -138,6 +147,7 @@ def train_baseline(config: TrainingConfig) -> dict[str, Any]:
         random_state=42,
     )
 
+    configure_tracking(config.use_dagshub)
     mlflow.set_experiment(config.experiment_name)
     with mlflow.start_run(run_name="baseline_logistic_regression") as run:
         model.fit(x_train, y_train)

@@ -23,6 +23,8 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import RandomizedSearchCV, train_test_split
 
+from tracking import configure_tracking
+
 
 class TrainingDataError(ValueError):
     """Raised when processed training data is missing or invalid."""
@@ -36,6 +38,7 @@ class TuningConfig:
     n_iter: int
     cv: int
     max_rows: int | None
+    use_dagshub: bool
 
 
 TARGET_COLUMN = "Class"
@@ -54,6 +57,11 @@ def parse_args() -> TuningConfig:
         type=int,
         help="Optional cap for faster CI experiments. Use 0 for all rows.",
     )
+    parser.add_argument(
+        "--dagshub",
+        action="store_true",
+        help="Initialize DagsHub MLflow tracking for mhmhatta/smsml.",
+    )
     args = parser.parse_args()
     return TuningConfig(
         processed_dir=Path(args.processed_dir),
@@ -62,6 +70,7 @@ def parse_args() -> TuningConfig:
         n_iter=args.n_iter,
         cv=args.cv,
         max_rows=args.max_rows if args.max_rows > 0 else None,
+        use_dagshub=args.dagshub,
     )
 
 
@@ -200,6 +209,7 @@ def train_tuned_model(config: TuningConfig) -> dict[str, Any]:
     x_train, y_train, x_test, y_test = load_dataset(config.processed_dir, config.max_rows)
     search = build_search(config)
 
+    configure_tracking(config.use_dagshub)
     mlflow.set_experiment(config.experiment_name)
     with mlflow.start_run(run_name="tuned_random_forest") as run:
         search.fit(x_train, y_train)
