@@ -4,14 +4,14 @@ For this project, DagsHub is used as remote MLflow tracking.
 You do not need to upload creditcard.csv to DagsHub.
 
 Repository:
-https://dagshub.com/mhmhatta/my-first-repo
+https://dagshub.com/mhmhatta/smsml
 
 MLflow tracking URI:
-https://dagshub.com/mhmhatta/my-first-repo.mlflow
+https://dagshub.com/mhmhatta/smsml.mlflow
 
 PowerShell setup:
 
-$env:MLFLOW_TRACKING_URI="https://dagshub.com/mhmhatta/my-first-repo.mlflow"
+$env:MLFLOW_TRACKING_URI="https://dagshub.com/mhmhatta/smsml.mlflow"
 $env:MLFLOW_TRACKING_USERNAME="mhmhatta"
 $env:MLFLOW_TRACKING_PASSWORD="<paste-your-dagshub-token-here>"
 
@@ -24,8 +24,8 @@ python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000
 
 Open evidence:
 
-https://dagshub.com/mhmhatta/my-first-repo/experiments
-https://dagshub.com/mhmhatta/my-first-repo.mlflow
+https://dagshub.com/mhmhatta/smsml/experiments
+https://dagshub.com/mhmhatta/smsml.mlflow
 
 Expected runs:
 

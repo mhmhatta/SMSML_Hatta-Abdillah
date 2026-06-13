@@ -54,16 +54,15 @@ For this project, use DagsHub only as a **remote MLflow dashboard**.
 You do **not** need to upload `creditcard.csv` to DagsHub. Dataset upload/DVC is optional and can make the project ribet for no real scoring benefit. What Dicoding needs here is proof that experiment tracking works: params, metrics, and artifacts appear in DagsHub/MLflow.
 
 Your current DagsHub repo:
-API : 5964610ec0e9c48fac08b4097dde6066c9425c91
 
 ```text
-https://dagshub.com/mhmhatta/my-first-repo
+https://dagshub.com/mhmhatta/smsml
 ```
 
 So the MLflow tracking URI is:
 
 ```text
-https://dagshub.com/mhmhatta/my-first-repo.mlflow
+https://dagshub.com/mhmhatta/smsml.mlflow
 ```
 
 ### Step 1 - Create DagsHub Token
@@ -81,7 +80,7 @@ Copy the token once. Treat it like a password.
 Run this in the same terminal before training:
 
 ```powershell
-$env:MLFLOW_TRACKING_URI="https://dagshub.com/mhmhatta/my-first-repo.mlflow"
+$env:MLFLOW_TRACKING_URI="https://dagshub.com/mhmhatta/smsml.mlflow"
 $env:MLFLOW_TRACKING_USERNAME="mhmhatta"
 $env:MLFLOW_TRACKING_PASSWORD="<paste-your-dagshub-token-here>"
 ```
@@ -107,13 +106,13 @@ python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000
 Open this after training:
 
 ```text
-https://dagshub.com/mhmhatta/my-first-repo/experiments
+https://dagshub.com/mhmhatta/smsml/experiments
 ```
 
 or directly:
 
 ```text
-https://dagshub.com/mhmhatta/my-first-repo.mlflow
+https://dagshub.com/mhmhatta/smsml.mlflow
 ```
 
 You should see runs named:
@@ -130,7 +129,7 @@ PowerShell env vars may not reach an already-running notebook kernel. If you run
 ```python
 import os
 
-os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/mhmhatta/my-first-repo.mlflow"
+os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/mhmhatta/smsml.mlflow"
 os.environ["MLFLOW_TRACKING_USERNAME"] = "mhmhatta"
 os.environ["MLFLOW_TRACKING_PASSWORD"] = "<paste-your-dagshub-token-here>"
 ```

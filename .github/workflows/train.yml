@@ -46,16 +46,29 @@ jobs:
       - name: Preprocess dataset
         run: python cc_preprocessing/preprocess.py
 
+      - name: Validate MLflow secrets
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        run: |
+          if [ -z "$MLFLOW_TRACKING_USERNAME" ] || [ -z "$MLFLOW_TRACKING_PASSWORD" ]; then
+            echo "Missing DagsHub MLflow username/password secrets."
+            exit 1
+          fi
+          echo "Expected tracking URI: https://dagshub.com/mhmhatta/smsml.mlflow"
+          echo "Configured tracking URI: ${MLFLOW_TRACKING_URI:-not-set}"
+
       - name: Train baseline model
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
           MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
-        run: python modelling.py
+        run: python modelling.py --dagshub
 
       - name: Train tuned model
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
           MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
-        run: python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000
+        run: python modelling_tuning.py --dagshub --n-iter 4 --cv 3 --max-rows 80000
