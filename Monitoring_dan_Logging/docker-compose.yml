@@ -1,0 +1,43 @@
+services:
+  fraud-api:
+    build:
+      context: ..
+      dockerfile: Monitoring_dan_Logging/Dockerfile
+    container_name: fraud-api
+    ports:
+      - "8000:8000"
+
+  fraud-exporter:
+    build:
+      context: ..
+      dockerfile: Monitoring_dan_Logging/Dockerfile
+    container_name: fraud-exporter
+    command: ["python", "Monitoring_dan_Logging/3.prometheus_exporter.py"]
+    ports:
+      - "8001:8001"
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: fraud-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./2.prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - fraud-api
+      - fraud-exporter
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    container_name: fraud-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana_dashboard.json:/var/lib/grafana/dashboards/fraud_dashboard.json:ro
+      - ./grafana_alert_rules.yml:/etc/grafana/provisioning/alerting/fraud_alert_rules.yml:ro
+    depends_on:
+      - prometheus

@@ -1,0 +1,49 @@
+{
+  "config": {
+    "raw_path": "data_raw\\creditcard.csv",
+    "output_dir": "cc_preprocessing\\processed",
+    "test_size": 0.2,
+    "random_state": 42
+  },
+  "feature_columns": [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "target_column": "Class",
+  "scale_columns": [
+    "Time",
+    "Amount"
+  ],
+  "train_rows": 227845,
+  "test_rows": 56962,
+  "fraud_rate_train": 0.001729245759178389,
+  "fraud_rate_test": 0.0017204452090867595
+}

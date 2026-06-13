@@ -1,0 +1,5 @@
+Membangun_model/data_raw/creditcard.csv
+Membangun_model/mlruns
+**/__pycache__
+**/*.pyc
+.env

@@ -1,0 +1,32 @@
+name: credit-card-fraud-detection
+
+conda_env: conda.yaml
+
+entry_points:
+  preprocess:
+    parameters:
+      raw_path: {type: str, default: "data_raw/creditcard.csv"}
+      output_dir: {type: str, default: "cc_preprocessing/processed"}
+    command: "python cc_preprocessing/preprocess.py --raw-path {raw_path} --output-dir {output_dir}"
+
+  train:
+    parameters:
+      processed_dir: {type: str, default: "cc_preprocessing/processed"}
+    command: "python modelling.py --processed-dir {processed_dir}"
+
+  tune:
+    parameters:
+      processed_dir: {type: str, default: "cc_preprocessing/processed"}
+      n_iter: {type: int, default: 8}
+      cv: {type: int, default: 3}
+      max_rows: {type: int, default: 0}
+    command: "python modelling_tuning.py --processed-dir {processed_dir} --n-iter {n_iter} --cv {cv} --max-rows {max_rows}"
+
+  full_pipeline:
+    parameters:
+      raw_path: {type: str, default: "data_raw/creditcard.csv"}
+      processed_dir: {type: str, default: "cc_preprocessing/processed"}
+      n_iter: {type: int, default: 8}
+      cv: {type: int, default: 3}
+      max_rows: {type: int, default: 0}
+    command: "python cc_preprocessing/preprocess.py --raw-path {raw_path} --output-dir {processed_dir} && python modelling.py --processed-dir {processed_dir} && python modelling_tuning.py --processed-dir {processed_dir} --n-iter {n_iter} --cv {cv} --max-rows {max_rows}"

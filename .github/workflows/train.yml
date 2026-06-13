@@ -1,0 +1,61 @@
+name: Train Fraud Detection Model
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Membangun_model
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download dataset from Kaggle when missing
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          if [ ! -f data_raw/creditcard.csv ]; then
+            if [ -z "$KAGGLE_USERNAME" ] || [ -z "$KAGGLE_KEY" ]; then
+              echo "Missing data_raw/creditcard.csv and Kaggle secrets are not configured."
+              exit 1
+            fi
+            pip install kaggle
+            mkdir -p ~/.kaggle data_raw
+            printf '{"username":"%s","key":"%s"}' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
+            chmod 600 ~/.kaggle/kaggle.json
+            kaggle datasets download -d mlg-ulb/creditcardfraud -p data_raw --unzip
+          fi
+
+      - name: Preprocess dataset
+        run: python cc_preprocessing/preprocess.py
+
+      - name: Train baseline model
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        run: python modelling.py
+
+      - name: Train tuned model
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        run: python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000

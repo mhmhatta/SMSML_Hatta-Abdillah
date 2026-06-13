@@ -1,0 +1,10 @@
+Membangun_model/data_raw/creditcard.csv
+Membangun_model/cc_preprocessing/processed/*.csv
+Membangun_model/cc_preprocessing/processed/*.joblib
+Membangun_model/artifacts/*.joblib
+Membangun_model/artifacts/*.png
+Membangun_model/artifacts/*.json
+Membangun_model/mlruns/
+*.pyc
+__pycache__/
+.env

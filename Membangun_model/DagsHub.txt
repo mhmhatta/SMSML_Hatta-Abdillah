@@ -1,0 +1,44 @@
+DagsHub + MLflow Tracking Setup
+
+For this project, DagsHub is used as remote MLflow tracking.
+You do not need to upload creditcard.csv to DagsHub.
+
+Repository:
+https://dagshub.com/mhmhatta/my-first-repo
+
+MLflow tracking URI:
+https://dagshub.com/mhmhatta/my-first-repo.mlflow
+
+PowerShell setup:
+
+$env:MLFLOW_TRACKING_URI="https://dagshub.com/mhmhatta/my-first-repo.mlflow"
+$env:MLFLOW_TRACKING_USERNAME="mhmhatta"
+$env:MLFLOW_TRACKING_PASSWORD="<paste-your-dagshub-token-here>"
+
+Run from the same terminal:
+
+cd E:\projects\Dicoding\MSML\SMSML_Muhammad-Hatta-Abdillah\Membangun_model
+python cc_preprocessing\preprocess.py
+python modelling.py
+python modelling_tuning.py --n-iter 4 --cv 3 --max-rows 80000
+
+Open evidence:
+
+https://dagshub.com/mhmhatta/my-first-repo/experiments
+https://dagshub.com/mhmhatta/my-first-repo.mlflow
+
+Expected runs:
+
+- baseline_logistic_regression
+- tuned_random_forest
+
+Evidence to capture:
+
+- MLflow experiment page
+- Baseline run metrics
+- Tuned model run metrics
+- Logged model artifact
+- Confusion matrix artifact
+- Feature importance artifact
+
+Never commit the DagsHub token.

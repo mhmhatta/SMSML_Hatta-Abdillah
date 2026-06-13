@@ -1,0 +1,36 @@
+Manual Experiment Notes - Credit Card Fraud Detection
+
+Dataset:
+- Source: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+- Raw file location: Membangun_model/data_raw/creditcard.csv
+- Target: Class, where 1 means fraud and 0 means non-fraud.
+
+EDA checklist:
+- Check dataset shape, column types, duplicate rows, missing values.
+- Compare fraud vs non-fraud distribution.
+- Plot Amount distribution by class.
+- Plot Time distribution by class.
+- Check correlation between features and target.
+
+Preprocessing checklist:
+- Keep V1-V28 because they are already PCA-transformed.
+- Scale Time and Amount only.
+- Use stratified train/test split because target is heavily imbalanced.
+- Save processed train/test files from automated preprocessing script.
+
+Modeling checklist:
+- Baseline: Logistic Regression with class_weight="balanced".
+- Tuned model: RandomForestClassifier with class_weight="balanced_subsample".
+- Main metric: average precision / PR-AUC.
+- Secondary metrics: ROC-AUC, recall, precision, F1.
+
+Why PR-AUC:
+- Accuracy is misleading because the fraud class is rare.
+- PR-AUC focuses more on fraud detection quality.
+
+MLflow evidence:
+- Baseline run metrics.
+- Tuned run metrics.
+- Model artifact.
+- Confusion matrix.
+- Feature importance.
