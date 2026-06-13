@@ -8,3 +8,4 @@ Membangun_model/mlruns/
 *.pyc
 __pycache__/
 .env
+Membangun_model/namadataset_preprocessing/processed/*.csv
