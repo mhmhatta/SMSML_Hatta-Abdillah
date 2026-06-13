@@ -15,7 +15,3 @@ Before running GitHub Actions, add repository secrets:
 - MLFLOW_TRACKING_URI
 - MLFLOW_TRACKING_USERNAME
 - MLFLOW_TRACKING_PASSWORD
-
-Important:
-- If data_raw/creditcard.csv is not committed, the workflow downloads it from Kaggle using KAGGLE_USERNAME and KAGGLE_KEY.
-- Do not hardcode Kaggle or DagsHub credentials in any Python or YAML file.

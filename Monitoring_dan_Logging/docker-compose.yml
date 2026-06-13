@@ -38,6 +38,5 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana_dashboard.json:/var/lib/grafana/dashboards/fraud_dashboard.json:ro
-      - ./grafana_alert_rules.yml:/etc/grafana/provisioning/alerting/fraud_alert_rules.yml:ro
     depends_on:
       - prometheus

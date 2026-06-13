@@ -68,10 +68,23 @@ REQUEST_COUNTER = Counter(
     "fraud_api_prediction_requests_total",
     "Total prediction requests received by the fraud API.",
 )
+HEALTH_COUNTER = Counter(
+    "fraud_api_health_requests_total",
+    "Total health-check requests received by the fraud API.",
+)
+ERROR_COUNTER = Counter(
+    "fraud_api_prediction_errors_total",
+    "Total failed prediction requests.",
+)
 PREDICTION_COUNTER = Counter(
     "fraud_api_predictions_total",
     "Prediction count by predicted class.",
     ["label"],
+)
+TRANSACTION_AMOUNT = Histogram(
+    "fraud_api_transaction_amount",
+    "Distribution of incoming transaction amounts.",
+    buckets=(0, 1, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000),
 )
 FRAUD_PROBABILITY = Histogram(
     "fraud_api_fraud_probability",
@@ -120,6 +133,7 @@ def build_feature_frame(payload: TransactionRequest) -> pd.DataFrame:
 
 @app.get("/health")
 def health() -> dict[str, str]:
+    HEALTH_COUNTER.inc()
     return {"status": "ok"}
 
 
@@ -128,6 +142,7 @@ def predict(payload: TransactionRequest) -> PredictionResponse:
     start_time = time.perf_counter()
     REQUEST_COUNTER.inc()
     try:
+        TRANSACTION_AMOUNT.observe(payload.Amount)
         features = build_feature_frame(payload)
         fraud_probability = float(MODEL.predict_proba(features)[:, 1][0])
         prediction = int(fraud_probability >= 0.5)
@@ -140,6 +155,7 @@ def predict(payload: TransactionRequest) -> PredictionResponse:
             fraud_probability=fraud_probability,
         )
     except Exception as exc:
+        ERROR_COUNTER.inc()
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     finally:
         REQUEST_LATENCY.observe(time.perf_counter() - start_time)
